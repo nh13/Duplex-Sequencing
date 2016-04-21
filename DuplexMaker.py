@@ -157,7 +157,10 @@ def main():
                             consTag = dictTag
                         elif switchTag in consensusDict:
                             consTag = switchTag  
+                            # Remember to update the query name
+                            a.qname = switchTag
                         if consTag != None:
+                            assert a.qname == consensusDict[consTag].qname
                             line1 = '@%d:%s\n%s\n+\n%s\n' % (outputReadNum, a.qname, a.seq, a.qual)
                             line2 = '@%d:%s\n%s\n+\n%s\n' % (outputReadNum, consensusDict[consTag].qname, consensusDict[consTag].seq, consensusDict[consTag].qual)
                             outputReadNum += 1
@@ -188,6 +191,7 @@ def main():
         a.qname = consTag
         a.seq = '.' * o.read_length
         a.qual = qualScore
+        assert a.qname == consensusDict[consTag].qname
         line1 = '@%d:%s\n%s\n+\n%s\n' % (outputReadNum, a.qname, a.seq, a.qual)
         line2 = '@%d:%s\n%s\n+\n%s\n' % (outputReadNum, consensusDict[consTag].qname, consensusDict[consTag].seq, consensusDict[consTag].qual)
         outputReadNum += 1
