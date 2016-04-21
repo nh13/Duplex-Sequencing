@@ -137,7 +137,7 @@ def main():
                 switchTag = dictTag[o.blength:]+dictTag[:o.blength]
                 
                 try:
-                    consensus = DSCMaker( [readDict[dictTag], readDict[switchtag]],  o.read_length )
+                    consensus = DSCMaker( [readDict[dictTag], readDict[switchTag]],  o.read_length )
                     duplexMade += 1
                     # Filter out consensuses with too many Ns in them
                     if consensus.count("N")/ float(len(consensus)) > o.Ncutoff:
