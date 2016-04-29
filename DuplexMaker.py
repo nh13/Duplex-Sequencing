@@ -170,6 +170,7 @@ def main():
                             else:
                                 fastqFile1.write(line2)
                                 fastqFile2.write(line1)
+                            del consensusDict[consTag]
                         else:
                             consensusDict[dictTag]=a
 
