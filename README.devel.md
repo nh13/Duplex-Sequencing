@@ -12,4 +12,4 @@ This page shows the various branches that have been merged into nh13/Duplex-Sequ
 | Bug Fix after removing output BAM in DuplexMaker.py | 8dc7df6689832de882835ec977509cbbf1b7ec35 | Not submitted |
 | Add RG to the output of ConsensusMaker if RG exists in the input | 0924cc0987b854c0c35ffbc7becf7c64faec3d61 | Not submitted |
 | Make read names consistent across pairs for the SSCS | 81cdc1c3de11f1165d496ecee001b9c1ec8ad8bf | Not submitted |
-| Unpaired reads should not have mate information | 6925f9ae159612495f462b2f3c8bf3659389bc08 | Not submitted |
+| Unpaired reads should not have mate information | 6925f9ae159612495f462b2f3c8bf3659389bc08 and 9cebe36031c16cab5f0a7b9ff72d2ddfc1e3ea0b | Not submitted |
