@@ -299,7 +299,10 @@ def main():
                 else :
                     # Add the sequence to the read dictionary
                     if tag not in readDict:
-                        readDict[tag] = [readWin[winPos%2].flag, readWin[winPos%2].rname, readWin[winPos%2].pos, readWin[winPos%2].mrnm, readWin[winPos%2].mpos, readWin[winPos%2].isize,{str(readWin[winPos%2].cigar):[0,readWin[winPos%2].cigar]}]
+                        rg_tag = None
+                        if readWin[winPos%2].has_tag("RG"):
+                            rg_tag = readWin[winPos%2].get_tag("RG")
+                        readDict[tag] = [readWin[winPos%2].flag, readWin[winPos%2].rname, readWin[winPos%2].pos, readWin[winPos%2].mrnm, readWin[winPos%2].mpos, readWin[winPos%2].isize, {str(readWin[winPos%2].cigar):[0,readWin[winPos%2].cigar]}, rg_tag]
 
                     if str(readWin[winPos%2].cigar) not in readDict[tag][6]:
                         readDict[tag][6][str(readWin[winPos%2].cigar)]=[0,readWin[winPos%2].cigar]
@@ -357,6 +360,7 @@ def main():
                                 a.mpos=readDict[dictTag][4]
                                 a.isize = readDict[dictTag][5]
                                 a.qual = qualScore  
+                                a.set_tag('RG', readDict[dictTag][7])
                                 outNC1.write(a)
                                 LCC += 1
 
@@ -377,6 +381,7 @@ def main():
                         a.mpos=readDict[dictTag][4]
                         a.isize = readDict[dictTag][5]
                         a.qual = qualScore
+                        a.set_tag('RG', readDict[dictTag][7])
 
                         # Write SSCSs to output BAM file in read pairs.
                         altTag=dictTag.replace(("1" if "1" in dictTag else "2"),("2" if "1" in dictTag else "1"))
