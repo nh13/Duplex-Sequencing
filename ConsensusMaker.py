@@ -177,10 +177,11 @@ def tagStats(tagCountsFile, tagStatsFile):
     return(True)
 
 def removeReadNumberFromQName(qname):
-    tokens = qname.split(":")
-    assert(len(tokens) == 3)
-    del tokens[1]
-    return ":".join(tokens)
+    #tokens = qname.split(":")
+    #assert(len(tokens) == 3)
+    #del tokens[1]
+    #return ":".join(tokens)
+    return qname.split(":")[0]
 
 def main():
     #Parameters to be input.
@@ -355,7 +356,7 @@ def main():
                         if cigStr != maxCig:
                             for n in xrange(2, len(readDict[dictTag][6][cigStr][2:])):
                                 a = pysam.AlignedRead()
-                                a.qname = dictTag + ':' + str(fam_size)
+                                a.qname = dictTag #+ ':' + str(fam_size)
                                 a.flag = readDict[dictTag][0]
                                 a.seq = readDict[dictTag][6][cigStr][n]
                                 a.rname = readDict[dictTag][1]
@@ -376,7 +377,7 @@ def main():
                     if (consensus.count("N" )/ float(len(consensus)) <= o.Ncutoff and 'n' in o.filt) or ('n' not in o.filt):
                         # Write a line to the consensusDictionary
                         a = pysam.AlignedRead()
-                        a.qname = dictTag + ":" + str(fam_size)
+                        a.qname = dictTag #+ ":" + str(fam_size)
                         a.flag = readDict[dictTag][0]
                         a.seq = consensus
                         a.rname = readDict[dictTag][1]
@@ -398,6 +399,7 @@ def main():
                             b = consensusDict.pop(altTag)
                             b.qname = removeReadNumberFromQName(b.qname)
                             b.qname = "%d:%s" % (outputReadNum, b.qname)
+                            assert(a.qname == b.qname)
                             outputReadNum += 1
                             if a.is_read1 == True:
                                 outBam.write(a)
@@ -424,10 +426,13 @@ def main():
             UP += 1
         else:
             b = consensusDict.pop(consTag)
+            b.qname = removeReadNumberFromQName(b.qname)
+            b.qname = "%d:%s" % (outputReadNum, a.qname)
             # keep flags: read unmapped, read reverse strand, not primary alignment, vendor QC, PCR duplicate, supplementary
             b.flag = b.flag & (4 | 16 | 256 | 512 | 1024 | 2048)
-            b.qname = removeReadNumberFromQName(b.qname)
-            b.qname = "%d:%s" % (outputReadNum, b.qname)
+            b.mrnm = -1
+            b.mpos = 0
+            b.isize = 0
             outputReadNum += 1
             outBam.write(b)
 
