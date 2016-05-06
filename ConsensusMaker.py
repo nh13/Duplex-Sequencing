@@ -424,6 +424,8 @@ def main():
             UP += 1
         else:
             b = consensusDict.pop(consTag)
+            # keep flags: read unmapped, read reverse strand, not primary alignment, vendor QC, PCR duplicate, supplementary
+            b.flag = b.flag & (4 | 16 | 256 | 512 | 1024 | 2048)
             b.qname = removeReadNumberFromQName(b.qname)
             b.qname = "%d:%s" % (outputReadNum, b.qname)
             outputReadNum += 1
