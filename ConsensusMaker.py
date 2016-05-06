@@ -176,6 +176,12 @@ def tagStats(tagCountsFile, tagStatsFile):
     fOut.close()
     return(True)
 
+def removeReadNumberFromQName(qname):
+    tokens = qname.split(":")
+    assert(len(tokens) == 3)
+    del tokens[1]
+    return ":".join(tokens)
+
 def main():
     #Parameters to be input.
     parser=ArgumentParser()
@@ -387,8 +393,10 @@ def main():
                         altTag=dictTag.replace(("1" if "1" in dictTag else "2"),("2" if "1" in dictTag else "1"))
 
                         if altTag in consensusDict:
+                            a.qname = removeReadNumberFromQName(a.qname)
                             a.qname = "%d:%s" % (outputReadNum, a.qname)
                             b = consensusDict.pop(altTag)
+                            b.qname = removeReadNumberFromQName(b.qname)
                             b.qname = "%d:%s" % (outputReadNum, b.qname)
                             outputReadNum += 1
                             if a.is_read1 == True:
@@ -416,6 +424,7 @@ def main():
             UP += 1
         else:
             b = consensusDict.pop(consTag)
+            b.qname = removeReadNumberFromQName(b.qname)
             b.qname = "%d:%s" % (outputReadNum, b.qname)
             outputReadNum += 1
             outBam.write(b)
