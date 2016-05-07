@@ -183,6 +183,21 @@ def removeReadNumberFromQName(qname):
     #return ":".join(tokens)
     return qname.split(":")[0]
 
+def makeUnmappedIfCigarIsEmpty(a):
+    if a.cigar is None or a.cigar == "" or len(a.cigar) == 0:
+        a.flag = a.flag | 4
+        return True
+    else:
+        return False
+
+def makeUnmappedIfCigarIsEmptyPair(a, b):
+    a_unmapped = makeUnmappedIfCigarIsEmpty(a)
+    b_unmapped = makeUnmappedIfCigarIsEmpty(b)
+    if a_unmapped:
+        b.flag = b.flag | 8
+    if b_unmapped:
+        a.flag = a.flag | 8
+
 def main():
     #Parameters to be input.
     parser=ArgumentParser()
@@ -399,6 +414,7 @@ def main():
                             b = consensusDict.pop(altTag)
                             b.qname = removeReadNumberFromQName(b.qname)
                             b.qname = "%d:%s" % (outputReadNum, b.qname)
+                            makeUnmappedIfCigarIsEmptyPair(a, b)
                             assert(a.qname == b.qname)
                             outputReadNum += 1
                             if a.is_read1 == True:
@@ -430,6 +446,7 @@ def main():
             b.qname = "%d:%s" % (outputReadNum, a.qname)
             # keep flags: read unmapped, read reverse strand, not primary alignment, vendor QC, PCR duplicate, supplementary
             b.flag = b.flag & (4 | 16 | 256 | 512 | 1024 | 2048)
+            makeUnmappedIfCigarIsEmpty(b)
             b.mrnm = -1
             b.mpos = 0
             b.isize = 0
