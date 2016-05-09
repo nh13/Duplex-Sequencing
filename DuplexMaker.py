@@ -99,7 +99,8 @@ def main():
     firstRead = bamEntry.next() # Get the first read
     readDict = {} # Initialize the read dictionary
     firstTag=firstRead.qname.split(":")[1]
-    qualScore = firstRead.qual # Set a dummy quality score
+    #qualScore = firstRead.qual # Set a dummy quality score
+    qualScore = "9" * len(firstRead.qual)
     consensusDict={}
 
     # Start going through the input BAM file, one position at a time.
